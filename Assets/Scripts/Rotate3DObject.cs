@@ -2,23 +2,28 @@ using UnityEngine;
 
 public class Rotate3DObject : MonoBehaviour
 {
-    private float m_rotationSpeed = 25; 
-    private float m_timeToTravel = 3;
-    private bool m_direction = false; // Direction at the object is rotating
-        public float RotationSpeed{
-        get { return m_rotationSpeed; } 
-        set { 
-            if (value > 0 && value <= 90) { // Set boundaries for recivied value
-                m_rotationSpeed = value; 
-            } else { 
-                Debug.Log("Out of boundaries value"); 
+    private float _rotationSpeed = 25;
+    private float _timeToTravel = 3;
+    private bool m_direction = false; // Direction the object is rotating
+    public float RotationSpeed
+    {
+        get { return _rotationSpeed; }
+        set
+        {
+            if (value > 0 && value <= 90)
+            { // Set boundaries for recivied value
+                _rotationSpeed = value;
+            }
+            else
+            {
+                Debug.Log("Out of boundaries value");
             }
         }
     }
     private int m_state = 0;
     void Start()
     {
-        iTween.MoveTo(this.gameObject, iTween.Hash("position", this.transform.position + new Vector3(0, 5, 5), "easetype", iTween.EaseType.easeOutElastic, "time", m_timeToTravel));
+        iTween.MoveTo(this.gameObject, iTween.Hash("position", this.transform.position + new Vector3(0, 5, 5), "easetype", iTween.EaseType.easeOutElastic, "time", _timeToTravel));
     }
 
     // Update is called once per frame
@@ -40,23 +45,24 @@ public class Rotate3DObject : MonoBehaviour
         }
         */
 
-        if (Input.GetKeyDown(KeyCode.Space) == true) {
+        if (Input.GetKeyDown(KeyCode.Space) == true)
+        {
             m_state = (m_state + 1) % 4; // The "%" symbol performs an integer division and returns the remainder, so it sets to 0 if it's 3 before pressing the space bar
         }
 
-        switch(m_state)
+        switch (m_state)
         {
             case 0:
-                this.transform.Rotate(new Vector3(0, m_rotationSpeed * Time.deltaTime, 0));
+                this.transform.Rotate(new Vector3(0, _rotationSpeed * Time.deltaTime, 0));
                 break;
             case 1:
-                this.transform.Rotate(new Vector3(0, -m_rotationSpeed * Time.deltaTime, 0));
+                this.transform.Rotate(new Vector3(0, -_rotationSpeed * Time.deltaTime, 0));
                 break;
             case 2:
-                this.transform.Rotate(new Vector3(0, 4 * m_rotationSpeed * Time.deltaTime, 0));
+                this.transform.Rotate(new Vector3(0, 4 * _rotationSpeed * Time.deltaTime, 0));
                 break;
             case 3:
-                this.transform.Rotate(new Vector3(4 * m_rotationSpeed * Time.deltaTime, 0, 0));
+                this.transform.Rotate(new Vector3(4 * _rotationSpeed * Time.deltaTime, 0, 0));
                 break;
         }
 
