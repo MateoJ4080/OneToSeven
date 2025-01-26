@@ -40,4 +40,16 @@ public class Player : MonoBehaviour
         _camRotationY = Mathf.Clamp(_camRotationY, -60, 60);
         playerCamera.transform.localEulerAngles = new Vector3(_camRotationY, rotationX, 0);
     }
+
+    void OnTriggerEnter(Collider _collision)
+    {
+        if (_collision.gameObject.GetComponent<Spikes>() != null)
+        {
+            Debug.Log("PLAYER HAS COLLIDED WITH A SPIKES INSTANCE");
+        }
+        if (_collision.gameObject.GetComponent<Portal>() != null)
+        {
+            Debug.Log("PLAYER HAS COLLIDED WITH A PORTAL INSTANCE");
+        }
+    }
 }
