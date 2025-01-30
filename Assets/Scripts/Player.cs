@@ -1,22 +1,24 @@
+using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject playerCamera;
-    [SerializeField]
-    private float _speed = 100;
+    private PlayerHealth playerHealth;
+    [SerializeField] private GameObject playerCamera;
+    [SerializeField] private float _speed = 10;
+    [SerializeField] private float _maxSpeed = 10;
     [SerializeField] private float _camSens = 7;
-    private float _camRotationY = 0;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private float _camRotationY = 0;
+    private Rigidbody _rb;
+
     void Start()
     {
-
+        _rb = GetComponent<Rigidbody>();
+        playerHealth = new PlayerHealth();
     }
 
-    // Update is called once per frame
     void Update()
     {
         Move();
@@ -30,7 +32,9 @@ public class Player : MonoBehaviour
         Vector3 forward = axisVertical * playerCamera.transform.forward * _speed * Time.deltaTime;
         Vector3 lateral = axisHorizontal * playerCamera.transform.right * _speed * Time.deltaTime;
         Vector3 increment = forward + lateral;
-        GetComponent<Rigidbody>().MovePosition(transform.position + increment);
+
+        Debug.Log(_rb.linearVelocity.magnitude);
+        _rb.MovePosition(transform.position + increment);
     }
 
     private void RotateCamera()
@@ -41,15 +45,18 @@ public class Player : MonoBehaviour
         playerCamera.transform.localEulerAngles = new Vector3(_camRotationY, rotationX, 0);
     }
 
-    void OnTriggerEnter(Collider _collision)
+    void OnTriggerEnter(Collider collision)
     {
-        if (_collision.gameObject.GetComponent<Spikes>() != null)
+        Spikes spikes = collision.gameObject.GetComponent<Spikes>();
+        if (spikes != null)
         {
-            Debug.Log("PLAYER HAS COLLIDED WITH A SPIKES INSTANCE");
+            playerHealth.DecreaseHealth(spikes.DamageHealth);
+            Debug.Log("Player has collided with a spikes instance. Life is now " + playerHealth.Health + ".");
         }
-        if (_collision.gameObject.GetComponent<Portal>() != null)
+        if (collision.gameObject.GetComponent<Portal>() != null)
         {
-            Debug.Log("PLAYER HAS COLLIDED WITH A PORTAL INSTANCE");
+            playerHealth.IncreaseHealth(10);
+            Debug.Log("Player has collided with a portal instance. Life is now " + playerHealth.Health + ".");
         }
     }
 }

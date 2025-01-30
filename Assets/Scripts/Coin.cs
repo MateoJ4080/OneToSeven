@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class Portal : MonoBehaviour
+public class Coin : MonoBehaviour
 {
-    private int _healthIncreasedByPortal = 10;
+    private int _coins;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -11,6 +11,10 @@ public class Portal : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+
+    }
+    void AddCoins(int coins)
     {
 
     }
