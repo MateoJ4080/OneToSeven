@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -5,6 +6,9 @@ using UnityEngine.UIElements;
 public class Player : MonoBehaviour
 {
     private PlayerHealth playerHealth;
+    private Spikes spikes;
+    private Portal portal;
+    private PlayerCoins coin;
     [SerializeField] private GameObject playerCamera;
     [SerializeField] private float _speed = 10;
     [SerializeField] private float _maxSpeed = 10;
@@ -47,7 +51,10 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        Spikes spikes = collision.gameObject.GetComponent<Spikes>();
+        spikes = collision.gameObject.GetComponent<Spikes>();
+        portal = collision.gameObject.GetComponent<Portal>();
+        coin = collision.gameObject.GetComponent<PlayerCoins>();
+
         if (spikes != null)
         {
             playerHealth.DecreaseHealth(spikes.DamageHealth);
@@ -57,6 +64,11 @@ public class Player : MonoBehaviour
         {
             playerHealth.IncreaseHealth(10);
             Debug.Log("Player has collided with a portal instance. Life is now " + playerHealth.Health + ".");
+        }
+        if (collision.gameObject.GetComponent<PlayerCoins>() != null)
+        {
+            coin.CollectCoin(1);
+            Debug.Log("Player has collected a coin. Coins:" + coin.GetCoins());
         }
     }
 }
