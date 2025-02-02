@@ -12,7 +12,7 @@ public class PlayerCoins : MonoBehaviour
 
     public void CollectCoin(int amount)
     {
-        if (amount > 0) // Solo permite sumar monedas válidas
+        if (amount > 0) // Only adds valid coins
         {
             _coinsAmount += amount;
         }

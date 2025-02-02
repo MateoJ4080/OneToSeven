@@ -4,7 +4,7 @@ public class Rotate3DObject : MonoBehaviour
 {
     private float _rotationSpeed = 25;
     private float _timeToTravel = 3;
-    private bool m_direction = false; // Direction the object is rotating
+    private bool m_direction = false; // Direction the object is rotating at
     public float RotationSpeed
     {
         get { return _rotationSpeed; }

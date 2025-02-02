@@ -4,7 +4,11 @@ using System;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] private int _health;
+    private PlayerHealth playerHealth;
+    private Spikes spikes;
+    private Portal portal;
+
+    [SerializeField] private int _health = 100;
     public int Health => _health;
     [SerializeField] private int _maxHealth;
 
@@ -22,6 +26,24 @@ public class PlayerHealth : MonoBehaviour
     }
     private void Die()
     {
-        Debug.Log("Player has died.");
+        Debug.Log("<Die method> Player has died.");
+    }
+
+    void OnTriggerEnter(Collider collision)
+    {
+        spikes = collision.gameObject.GetComponent<Spikes>();
+        portal = collision.gameObject.GetComponent<Portal>();
+
+        if (spikes != null)
+        {
+            playerHealth.DecreaseHealth(spikes.DamageHealth);
+            Debug.Log("Player has collided with a spikes instance. Life is now " + playerHealth.Health + ".");
+        }
+        if (collision.gameObject.GetComponent<Portal>() != null)
+        {
+            playerHealth.IncreaseHealth(10);
+            Debug.Log("Player has collided with a portal instance. Life is now " + playerHealth.Health + ".");
+        }
     }
 }
+
