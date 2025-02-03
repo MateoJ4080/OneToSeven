@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     private PlayerHealth playerHealth;
     private Spikes spikes;
     private Portal portal;
-    private PlayerCoins coin;
+    private Coin coin;
     [SerializeField] private GameObject playerCamera;
     [SerializeField] private float _speed = 50;
     [SerializeField] private float _maxSpeed = 10;
@@ -46,17 +46,5 @@ public class Player : MonoBehaviour
         _camRotationY -= Input.GetAxis("Mouse Y") * _camSens;
         _camRotationY = Mathf.Clamp(_camRotationY, -60, 60);
         playerCamera.transform.localEulerAngles = new Vector3(_camRotationY, rotationX, 0);
-    }
-
-    void OnTriggerEnter(Collider collision)
-    {
-        coin = collision.gameObject.GetComponent<PlayerCoins>();
-
-        if (collision.gameObject.GetComponent<PlayerCoins>() != null)
-        {
-            coin.CollectCoin(1);
-            Debug.Log("Player has collected a coin. Coins:" + coin.GetCoins());
-            GameObject.Destroy(collision.gameObject);
-        }
     }
 }
