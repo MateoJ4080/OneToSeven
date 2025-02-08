@@ -7,6 +7,7 @@ public class ManaOrb : MonoBehaviour, IPickup
     public void Collect(Player player)
     {
         player.GetComponent<PlayerMana>()?.IncreaseMana(manaAmount);
+        AudioManager.Instance.Play(AudioManager.SoundType.Mana_Orb);
         Debug.Log("Mana increased by " + manaAmount);
         Destroy(gameObject);
     }

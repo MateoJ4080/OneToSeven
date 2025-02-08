@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour
 {
+    void Start()
+    {
+    }
+
     public enum SoundType
     {
         Coin,
