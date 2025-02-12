@@ -28,11 +28,26 @@ public class Player : Character
     {
         float axisVertical = Input.GetAxis("Vertical");
         float axisHorizontal = Input.GetAxis("Horizontal");
-        Vector3 forward = axisVertical * playerCamera.transform.forward * _speed * Time.deltaTime;
-        Vector3 lateral = axisHorizontal * playerCamera.transform.right * _speed * Time.deltaTime;
-        Vector3 increment = forward + lateral;
 
-        _rb.MovePosition(transform.position + increment);
+        // Get the camera's forward direction and remove the vertical component to prevent unwanted vertical movement
+        Vector3 forward = playerCamera.transform.forward;
+        forward.y = 0; // Ignore the Y component to keep movement strictly on the horizontal plane
+        forward.Normalize();
+
+        // Get the camera's right direction and remove the vertical component
+        Vector3 right = playerCamera.transform.right;
+        right.y = 0;
+        right.Normalize();
+
+        Vector3 direction = axisVertical * forward + axisHorizontal * right;
+
+        // Ensure that diagonal movement doesn't exceed the normal speed
+        // Without this, moving diagonally would be faster because both axes contribute to movement
+        direction = Vector3.ClampMagnitude(direction, 1f);
+
+        Vector3 movement = direction * _speed * Time.deltaTime;
+
+        _rb.MovePosition(transform.position + movement);
     }
 
     private void RotateCamera()
