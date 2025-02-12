@@ -3,12 +3,8 @@ using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Player : MonoBehaviour
+public class Player : Character
 {
-    private PlayerHealth playerHealth;
-    private Spikes spikes;
-    private Portal portal;
-    private Coin coin;
     [SerializeField] private GameObject playerCamera;
     [SerializeField] private float _speed = 50;
     [SerializeField] private float _maxSpeed = 10;
@@ -20,7 +16,6 @@ public class Player : MonoBehaviour
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        playerHealth = new PlayerHealth();
     }
 
     void Update()

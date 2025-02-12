@@ -368,15 +368,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3be870bd3141f9741b70abdfb4242cb6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.262824
+      value: 6.34
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3be870bd3141f9741b70abdfb4242cb6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.084812
+      value: -1.08
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3be870bd3141f9741b70abdfb4242cb6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.88818455
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3be870bd3141f9741b70abdfb4242cb6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -666,7 +666,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3be870bd3141f9741b70abdfb4242cb6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.262824
+      value: 6.34
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3be870bd3141f9741b70abdfb4242cb6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1803,8 +1803,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d642e8b13c8eb2d49af5ccaaba93e8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 100
-  _maxHealth: 100
 --- !u!4 &1346936741 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 584258210973403463, guid: 067aef17d31ccac40998c428244d87ca, type: 3}
@@ -2218,7 +2216,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 584258210973403463, guid: 067aef17d31ccac40998c428244d87ca, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.0860777
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 584258210973403463, guid: 067aef17d31ccac40998c428244d87ca, type: 3}
       propertyPath: m_LocalRotation.w
