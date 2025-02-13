@@ -3,16 +3,11 @@ using System;
 
 public class Character : MonoBehaviour
 {
-    public int Health;
+    private CharacterHealth _characterHealth;
 
-    public void DecreaseHealth(int amount)
+    private void Awake()
     {
-        Health -= amount;
-    }
-
-    public void IncreaseHealth(int amount)
-    {
-        Health += amount;
+        _characterHealth = GetComponent<CharacterHealth>();
     }
 
     // Virtual method for handling portal collisions.
@@ -29,8 +24,9 @@ public class Character : MonoBehaviour
 
         if (spikes != null)
         {
-            DecreaseHealth(spikes.DamageHealth);
-            Debug.Log(gameObject.name + " collided with spikes. Current health: " + Health);
+            _characterHealth.DecreaseHealth(spikes.DamageHealth);
+            Debug.Log(gameObject.name + " collided with spikes. Current health: " + _characterHealth.Health);
+            Debug.Log("OnTriggerEnter");
         }
 
         if (portal != null)
