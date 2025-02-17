@@ -7,10 +7,10 @@ public class PlayerMana : MonoBehaviour
 
     private void Start()
     {
-        currentMana = maxMana; // Inicia con maná lleno
+        currentMana = maxMana; // Starts with max mana
     }
 
-    public void IncreaseMana(int amount) // Method still not used
+    public void IncreaseMana(int amount) // Used in ManaOrb script
     {
         currentMana = Mathf.Min(currentMana + amount, maxMana);
         Debug.Log("Mana increased. Current mana: " + currentMana);

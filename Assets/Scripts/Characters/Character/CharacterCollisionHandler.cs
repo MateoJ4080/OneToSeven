@@ -1,36 +1,36 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class CharacterCollisionHandler : MonoBehaviour
+public class CharacterCollisionHandler : Character
 {
     private CharacterHealth _characterHealth;
+    private Character _character;
 
     private void Awake()
     {
+        _character = GetComponent<Character>();
         _characterHealth = GetComponent<CharacterHealth>();
     }
 
     private void OnTriggerEnter(Collider collision)
     {
+        Debug.Log("Colliding registered");
         Spikes spikes = collision.GetComponent<Spikes>();
         Portal portal = collision.GetComponent<Portal>();
 
         if (spikes != null)
         {
-            _characterHealth.DecreaseHealth(spikes.DamageHealth);
-            Debug.Log(gameObject.name + " collided with spikes. Current health: " + _characterHealth.Health);
+            OnSpikeCollision(spikes);
         }
 
-        // Virtual method for handling portal collisions.
-        // By default, it does nothing (affects only players when overridden).
         if (portal != null)
         {
-            OnPortalCollision(portal);
         }
     }
 
-    protected virtual void OnPortalCollision(Portal portal)
+    protected virtual void OnSpikeCollision(Spikes spikes)
     {
-        // Default behavior: no effect on non-player characters.
-        // Can be overridden in Player, Enemy, etc.
+        _characterHealth?.DecreaseHealth(spikes.DamageHealth);
+        Debug.Log(gameObject.name + " has collided with spikes, health: " + _characterHealth.Health);
     }
 }

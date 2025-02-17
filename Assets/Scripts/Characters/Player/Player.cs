@@ -1,13 +1,10 @@
-using Unity.VisualScripting;
-using UnityEditor.Callbacks;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Player : Character
 {
     [SerializeField] private GameObject playerCamera;
     [SerializeField] private float _speed = 50;
-    [SerializeField] private float _maxSpeed = 10;
+    // [SerializeField] private float _maxSpeed = 10;
     [SerializeField] private float _camSens = 7;
 
     private float _camRotationY = 0;
