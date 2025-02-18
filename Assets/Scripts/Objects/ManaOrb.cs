@@ -4,7 +4,7 @@ public class ManaOrb : MonoBehaviour, IPickup
 {
     [SerializeField] private int manaAmount = 20;
 
-    public void Collect(Player player)
+    public void Collect(PlayerMovement player)
     {
         player.GetComponent<PlayerMana>()?.IncreaseMana(manaAmount);
         AudioManager.Instance.Play(AudioManager.SoundType.Mana_Orb);

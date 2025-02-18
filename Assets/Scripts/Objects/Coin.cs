@@ -9,7 +9,7 @@ public class Coin : MonoBehaviour, IPickup
     {
         return _coinsAmount;
     }
-    public void Collect(Player player)
+    public void Collect(PlayerMovement player)
     {
         _coinsAmount += 1;
         AudioManager.Instance.Play(AudioManager.SoundType.Coin);

@@ -1,4 +1,4 @@
 public interface IPickup
 {
-    void Collect(Player player);
+    void Collect(PlayerMovement player);
 }

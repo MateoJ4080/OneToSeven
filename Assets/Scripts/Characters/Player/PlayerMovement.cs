@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Player : Character
+public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private GameObject playerCamera;
     [SerializeField] private float _speed = 50;

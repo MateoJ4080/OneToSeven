@@ -1,20 +1,17 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterCollisionHandler : Character
 {
-    private CharacterHealth _characterHealth;
-    private Character _character;
+    protected CharacterHealth _characterHealth;
 
-    private void Awake()
+    private void Start()
     {
-        _character = GetComponent<Character>();
         _characterHealth = GetComponent<CharacterHealth>();
+        Debug.Log(_characterHealth);
     }
 
     private void OnTriggerEnter(Collider collision)
     {
-        Debug.Log("Colliding registered");
         Spikes spikes = collision.GetComponent<Spikes>();
         Portal portal = collision.GetComponent<Portal>();
 
