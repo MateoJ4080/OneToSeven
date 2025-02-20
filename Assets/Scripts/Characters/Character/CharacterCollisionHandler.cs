@@ -7,13 +7,13 @@ public class CharacterCollisionHandler : Character
     private void Start()
     {
         _characterHealth = GetComponent<CharacterHealth>();
-        Debug.Log(_characterHealth);
+        // Debug.Log(_characterHealth);
     }
 
-    private void OnTriggerEnter(Collider collision)
+    private void OnTriggerEnter(Collider other)
     {
-        Spikes spikes = collision.GetComponent<Spikes>();
-        Portal portal = collision.GetComponent<Portal>();
+        Spikes spikes = other.GetComponent<Spikes>();
+        Portal portal = other.GetComponent<Portal>();
 
         if (spikes != null)
         {

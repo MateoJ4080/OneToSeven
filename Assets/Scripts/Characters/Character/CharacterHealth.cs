@@ -18,7 +18,7 @@ public class CharacterHealth : Character
         if (_health <= 0) Die();
     }
 
-    protected void Die()
+    protected virtual void Die()
     {
         Debug.Log(gameObject.name + " has died.");
     }

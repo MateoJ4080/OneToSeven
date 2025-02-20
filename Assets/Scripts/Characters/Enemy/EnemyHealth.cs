@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NPCHealth : CharacterHealth
+public class EnemyHealth : CharacterHealth
 {
     protected override void Die()
     {
