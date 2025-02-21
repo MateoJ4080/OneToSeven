@@ -7,12 +7,12 @@ public class CharacterHealth : Character
 
     public int Health => _health;
 
-    public void IncreaseHealth(int amount)
+    public virtual void IncreaseHealth(int amount)
     {
         _health = Mathf.Clamp(_health + amount, 0, _maxHealth);
     }
 
-    public void DecreaseHealth(int amount)
+    public virtual void DecreaseHealth(int amount)
     {
         _health = Mathf.Clamp(_health - amount, 0, _maxHealth);
         if (_health <= 0) Die();

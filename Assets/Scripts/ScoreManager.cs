@@ -1,8 +1,10 @@
 using UnityEngine;
+using System;
 
 public static class ScoreManager
 {
     private static int _score;
+    public static event Action OnScoreChanged;
 
     public static int Score
     {
@@ -14,6 +16,7 @@ public static class ScoreManager
                 _score = 0;
             else
                 _score = value;
+            OnScoreChanged?.Invoke();
         }
     }
 
