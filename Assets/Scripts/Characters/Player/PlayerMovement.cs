@@ -1,11 +1,19 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : PlayerHealth
 {
+    public enum PlayerState
+    {
+        Idle,
+        Walk,
+        Die
+    }
+
     [SerializeField] private GameObject playerCamera;
     [SerializeField] private float _speed = 50;
-    // [SerializeField] private float _maxSpeed = 10;
     [SerializeField] private float _camSens = 7;
+
+    private PlayerState _state = PlayerState.Idle;
 
     private float _camRotationY = 0;
     private Rigidbody _rb;
@@ -17,8 +25,29 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        Move();
+        Debug.Log(_state);
+        HandleState();
         RotateCamera();
+    }
+
+    private void HandleState()
+    {
+        switch (_state)
+        {
+            // Checking isDead first. If put at the bottom, you'd also need to check !isDead in PlayerState.Idle, for example.
+            case PlayerState.Die:
+                if (isDead == true) _state = PlayerState.Die;
+                break;
+
+            case PlayerState.Idle:
+                if (!IsMoving()) _state = PlayerState.Idle;
+                break;
+
+            case PlayerState.Walk:
+                if (IsMoving()) _state = PlayerState.Walk;
+                Move();
+                break;
+        }
     }
 
     private void Move()
@@ -53,5 +82,10 @@ public class PlayerMovement : MonoBehaviour
         _camRotationY -= Input.GetAxis("Mouse Y") * _camSens;
         _camRotationY = Mathf.Clamp(_camRotationY, -60, 60);
         playerCamera.transform.localEulerAngles = new Vector3(_camRotationY, rotationX, 0);
+    }
+
+    private bool IsMoving()
+    {
+        return Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0;
     }
 }

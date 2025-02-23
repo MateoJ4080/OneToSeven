@@ -19,15 +19,10 @@ public class CharacterCollisionHandler : Character
         {
             OnSpikeCollision(spikes);
         }
-
-        if (portal != null)
-        {
-        }
     }
 
     protected virtual void OnSpikeCollision(Spikes spikes)
     {
         _characterHealth?.DecreaseHealth(spikes.DamageHealth);
-        Debug.Log(gameObject.name + " has collided with spikes, health: " + _characterHealth.Health);
     }
 }

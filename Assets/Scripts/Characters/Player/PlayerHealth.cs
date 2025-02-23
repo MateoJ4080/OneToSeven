@@ -15,4 +15,8 @@ public class PlayerHealth : CharacterHealth
         base.IncreaseHealth(amount);
         OnHealthChanged?.Invoke();
     }
+    protected override void Die()
+    {
+        base.Die();
+    }
 }

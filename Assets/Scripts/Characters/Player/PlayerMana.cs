@@ -13,6 +13,6 @@ public class PlayerMana : MonoBehaviour
     public void IncreaseMana(int amount) // Used in ManaOrb script
     {
         currentMana = Mathf.Min(currentMana + amount, maxMana);
-        Debug.Log("Mana increased. Current mana: " + currentMana);
+        Debug.Log($"Mana increased. Current mana: {currentMana}");
     }
 }

@@ -4,6 +4,7 @@ public class CharacterHealth : Character
 {
     [SerializeField] private int _health = 100;
     [SerializeField] private int _maxHealth = 100;
+    protected bool isDead;
 
     public int Health => _health;
 
@@ -20,6 +21,7 @@ public class CharacterHealth : Character
 
     protected virtual void Die()
     {
+        isDead = true;
         Debug.Log(gameObject.name + " has died.");
     }
 }

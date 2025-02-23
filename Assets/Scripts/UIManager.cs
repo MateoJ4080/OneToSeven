@@ -21,6 +21,10 @@ public class UIManager : MonoBehaviour
         UpdateBulletsText();
     }
 
+    void Start()
+    {
+    }
+
     void OnEnable()
     {
         ScoreManager.OnScoreChanged += UpdateScoreText;
