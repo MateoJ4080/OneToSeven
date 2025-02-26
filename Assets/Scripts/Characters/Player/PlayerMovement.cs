@@ -1,5 +1,10 @@
+using System.IO;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : PlayerHealth
 {
     public enum PlayerState
@@ -9,32 +14,53 @@ public class PlayerMovement : PlayerHealth
         Die
     }
 
-    [SerializeField] private GameObject playerCamera;
-    [SerializeField] private float _speed = 50;
+    [SerializeField] private Transform cameraTransform;
     [SerializeField] private float _camSens = 7;
 
     private PlayerState _state = PlayerState.Idle;
 
-    private float _camRotationY = 0;
-    private Rigidbody _rb;
+    private Vector2 _movementInput;
 
-    void Start()
+    private InputManager _inputManager;
+    private PlayerControls _playerControls;
+
+    private CharacterController _controller;
+    private Vector3 playerVelocity;
+    private bool groundedPlayer;
+    [SerializeField] private float gravityValue = -9.81f;
+    [SerializeField] private float jumpHeight = 1.0f;
+    [SerializeField] private float _speed;
+
+    void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
+        _inputManager = InputManager.Instance;
+        _playerControls = new PlayerControls();
+        _controller = GetComponent<CharacterController>();
+
+        cameraTransform = Camera.main.transform;
+    }
+
+    void OnEnable()
+    {
+        _playerControls.Enable();
+    }
+
+    void OnDisable()
+    {
+        _playerControls.Disable();
     }
 
     void Update()
     {
-        Debug.Log(_state);
+        Move();
         HandleState();
-        RotateCamera();
     }
 
     private void HandleState()
     {
         switch (_state)
         {
-            // Checking isDead first. If put at the bottom, you'd also need to check !isDead in PlayerState.Idle, for example.
+            // Checking isDead first because if put at the bottom, we'd also need to check !isDead in PlayerState.Idle, for example.
             case PlayerState.Die:
                 if (isDead == true) _state = PlayerState.Die;
                 break;
@@ -52,40 +78,30 @@ public class PlayerMovement : PlayerHealth
 
     private void Move()
     {
-        float axisVertical = Input.GetAxis("Vertical");
-        float axisHorizontal = Input.GetAxis("Horizontal");
+        groundedPlayer = _controller.isGrounded;
+        if (groundedPlayer && playerVelocity.y < 0)
+        {
+            playerVelocity.y = 0f;
+        }
 
-        // Get the camera's forward direction and remove the vertical component to prevent unwanted vertical movement
-        Vector3 forward = playerCamera.transform.forward;
-        forward.y = 0; // Ignore the Y component to keep movement strictly on the horizontal plane
-        forward.Normalize();
+        Vector3 movement = _inputManager.GetPlayerMovement();
+        Vector3 move = new(movement.x, 0, movement.y);
+        move = cameraTransform.forward * move.z + cameraTransform.right * move.x;
+        move.y = 0;
+        _controller.Move(_speed * Time.deltaTime * move);
+        Debug.Log(move.magnitude);
 
-        // Get the camera's right direction and remove the vertical component
-        Vector3 right = playerCamera.transform.right;
-        right.y = 0;
-        right.Normalize();
+        if (_inputManager.PlayerJumpedThisFrame() && groundedPlayer)
+        {
+            playerVelocity.y += Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);
+        }
 
-        Vector3 direction = axisVertical * forward + axisHorizontal * right;
-
-        // Ensure that diagonal movement doesn't exceed the normal speed
-        // Without this, moving diagonally would be faster because both axes contribute to movement
-        direction = Vector3.ClampMagnitude(direction, 1f);
-
-        Vector3 movement = direction * _speed * Time.deltaTime;
-
-        _rb.MovePosition(transform.position + movement);
-    }
-
-    private void RotateCamera()
-    {
-        float rotationX = playerCamera.transform.localEulerAngles.y + Input.GetAxis("Mouse X") * _camSens;
-        _camRotationY -= Input.GetAxis("Mouse Y") * _camSens;
-        _camRotationY = Mathf.Clamp(_camRotationY, -60, 60);
-        playerCamera.transform.localEulerAngles = new Vector3(_camRotationY, rotationX, 0);
+        playerVelocity.y += gravityValue * Time.deltaTime;
+        _controller.Move(playerVelocity * Time.deltaTime);
     }
 
     private bool IsMoving()
     {
-        return Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0;
+        return _movementInput.magnitude > 0;
     }
 }
