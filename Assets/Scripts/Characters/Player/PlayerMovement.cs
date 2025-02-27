@@ -25,11 +25,13 @@ public class PlayerMovement : PlayerHealth
     private PlayerControls _playerControls;
 
     private CharacterController _controller;
-    private Vector3 playerVelocity;
-    private bool groundedPlayer;
-    [SerializeField] private float gravityValue = -9.81f;
-    [SerializeField] private float jumpHeight = 1.0f;
-    [SerializeField] private float _speed;
+    private Vector3 _playerVelocity;
+    private bool _groundedPlayer;
+    [SerializeField] private float _gravityValue = -9.81f;
+    [SerializeField] private float _jumpHeight = 1.0f;
+    [SerializeField] private float _movementSpeed;
+    [SerializeField] private float _movementLerpSpeed;
+    private Vector3 _currentMovement;
 
     void Awake()
     {
@@ -78,26 +80,29 @@ public class PlayerMovement : PlayerHealth
 
     private void Move()
     {
-        groundedPlayer = _controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
+        _groundedPlayer = _controller.isGrounded;
+        if (_groundedPlayer && _playerVelocity.y < 0)
         {
-            playerVelocity.y = 0f;
+            _playerVelocity.y = 0f;
         }
 
-        Vector3 movement = _inputManager.GetPlayerMovement();
-        Vector3 move = new(movement.x, 0, movement.y);
-        move = cameraTransform.forward * move.z + cameraTransform.right * move.x;
-        move.y = 0;
-        _controller.Move(_speed * Time.deltaTime * move);
-        Debug.Log(move.magnitude);
+        Vector3 movementInput = _inputManager.GetPlayerMovement();
+        Vector3 rawMovement = new(movementInput.x, 0, movementInput.y);
+        rawMovement = cameraTransform.forward * rawMovement.z + cameraTransform.right * rawMovement.x;
+        rawMovement.y = 0;
+        // _controller.Move(_movementSpeed * Time.deltaTime * rawMovement);
+        _currentMovement = Vector3.MoveTowards(_currentMovement, rawMovement, _movementLerpSpeed * Time.deltaTime);
+        _controller.Move(_currentMovement * _movementSpeed * Time.deltaTime);
 
-        if (_inputManager.PlayerJumpedThisFrame() && groundedPlayer)
+
+
+        if (_inputManager.PlayerJumpedThisFrame() && _groundedPlayer)
         {
-            playerVelocity.y += Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);
+            _playerVelocity.y += Mathf.Sqrt(_jumpHeight * -2.0f * _gravityValue);
         }
 
-        playerVelocity.y += gravityValue * Time.deltaTime;
-        _controller.Move(playerVelocity * Time.deltaTime);
+        _playerVelocity.y += _gravityValue * Time.deltaTime;
+        _controller.Move(_playerVelocity * Time.deltaTime);
     }
 
     private bool IsMoving()
