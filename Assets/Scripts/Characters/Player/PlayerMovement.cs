@@ -90,11 +90,8 @@ public class PlayerMovement : PlayerHealth
         Vector3 rawMovement = new(movementInput.x, 0, movementInput.y);
         rawMovement = cameraTransform.forward * rawMovement.z + cameraTransform.right * rawMovement.x;
         rawMovement.y = 0;
-        // _controller.Move(_movementSpeed * Time.deltaTime * rawMovement);
         _currentMovement = Vector3.MoveTowards(_currentMovement, rawMovement, _movementLerpSpeed * Time.deltaTime);
         _controller.Move(_currentMovement * _movementSpeed * Time.deltaTime);
-
-
 
         if (_inputManager.PlayerJumpedThisFrame() && _groundedPlayer)
         {
