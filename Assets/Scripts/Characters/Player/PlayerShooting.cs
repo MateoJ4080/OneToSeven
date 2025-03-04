@@ -11,7 +11,6 @@ public class PlayerShooting : MonoBehaviour
     public int bulletsShot;
 
     private PlayerControls playerControls;
-    private InputAction _shootAction;
 
     void Awake()
     {
