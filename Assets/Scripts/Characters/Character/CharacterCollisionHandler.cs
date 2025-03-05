@@ -1,3 +1,4 @@
+using Photon.Realtime;
 using UnityEngine;
 
 public class CharacterCollisionHandler : Character

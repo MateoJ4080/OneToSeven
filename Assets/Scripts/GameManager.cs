@@ -33,7 +33,7 @@ namespace Com.CompanyName.Shooter
                 return;
             }
             Debug.LogFormat("PhotonNetwork: Loading level: {0}", PhotonNetwork.CurrentRoom.PlayerCount);
-            PhotonNetwork.LoadLevel("Room for " + PhotonNetwork.CurrentRoom.PlayerCount);
+            PhotonNetwork.LoadLevel("Room for 1");
         }
 
         #endregion

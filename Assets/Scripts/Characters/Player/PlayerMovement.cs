@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
+
 public class PlayerMovement : PlayerHealth
 {
     public enum PlayerState
@@ -25,8 +26,8 @@ public class PlayerMovement : PlayerHealth
     private bool _groundedPlayer;
     [SerializeField] private float _gravityValue = -9.81f;
     [SerializeField] private float _jumpHeight = 1.0f;
-    [SerializeField] private float _movementSpeed;
-    [SerializeField] private float _movementLerpSpeed;
+    [SerializeField] private float _movementSpeed = 10;
+    [SerializeField] private float _movementLerpSpeed = 5;
     private Vector3 _currentMovement;
 
     void Awake()
@@ -84,6 +85,7 @@ public class PlayerMovement : PlayerHealth
 
         Vector3 movementInput = _inputManager.GetPlayerMovement();
         Vector3 rawMovement = new(movementInput.x, 0, movementInput.y);
+        Debug.Log(cameraTransform);
         rawMovement = cameraTransform.forward * rawMovement.z + cameraTransform.right * rawMovement.x;
         rawMovement.y = 0;
         _currentMovement = Vector3.MoveTowards(_currentMovement, rawMovement, _movementLerpSpeed * Time.deltaTime);
