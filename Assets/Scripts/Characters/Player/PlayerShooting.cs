@@ -39,4 +39,9 @@ public class PlayerShooting : MonoBehaviour
         bullet.Shoot(TYPE_BULLET, myCamera.transform.position, myCamera.transform.forward);
         Physics.IgnoreCollision(GetComponent<CharacterController>(), newBulletGO.GetComponent<Collider>());
     }
+
+    public void SetCamera(Transform camTransform)
+    {
+        myCamera = camTransform.gameObject;
+    }
 }
