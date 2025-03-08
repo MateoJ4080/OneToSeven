@@ -1,6 +1,8 @@
 using UnityEngine;
 using Photon.Pun;
 using Unity.Cinemachine;
+using System;
+using System.Linq;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : PlayerHealth
@@ -15,11 +17,8 @@ public class PlayerController : PlayerHealth
     private PlayerControls _playerControls;
 
     // Camera settings   
-    [SerializeField] private GameObject cameraPrefab;
-    [SerializeField] private CinemachineCamera cmCameraPrefab;
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Transform headTransform;
-    [SerializeField] private float _camSens = 7;
 
     // Player state
     private PlayerState _state = PlayerState.Idle;
@@ -47,13 +46,7 @@ public class PlayerController : PlayerHealth
     {
         if (photonView.IsMine)
         {
-            // Instantiate the camera prefab and Cinemachine Camera
-            Instantiate(cameraPrefab, headTransform.position, Quaternion.identity, headTransform);
-            cmCameraPrefab = Instantiate(cmCameraPrefab, headTransform.position, Quaternion.identity, headTransform);
-            cameraTransform = cmCameraPrefab.transform;  // Set the camera's transform for movement and rotation of the player
-
-            PlayerShooting playerShooting = GetComponent<PlayerShooting>();
-            if (playerShooting) playerShooting.SetCamera(cameraTransform);
+            cameraTransform = Camera.main.transform;
         }
     }
 
@@ -71,6 +64,7 @@ public class PlayerController : PlayerHealth
     {
         Move();
         HandleState();
+        transform.rotation = Quaternion.Euler(0, cameraTransform.rotation.eulerAngles.y, 0);
     }
 
     private void HandleState()

@@ -86,7 +86,7 @@ PrefabInstance:
     - target: {fileID: 9500000, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9100000, guid: 1b222757b9e3844209748206173481c3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -189,10 +189,9 @@ MonoBehaviour:
   _health: 100
   _maxHealth: 100
   cameraPrefab: {fileID: 6412301643623343335, guid: 0220d94ecfaa6cd42a775afff6fa06c0, type: 3}
-  cmCameraPrefab: {fileID: 563484735119237614, guid: ece3a73228e2ca444a419f352e740247, type: 3}
+  cmCamera: {fileID: 0}
   cameraTransform: {fileID: 0}
   headTransform: {fileID: 2663709642795147563}
-  _camSens: 7
   _movementSpeed: 10
   _movementLerpSpeed: 5
   _jumpHeight: 1
