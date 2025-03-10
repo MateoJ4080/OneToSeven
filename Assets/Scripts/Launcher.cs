@@ -3,7 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Unity.VisualScripting;
 
-namespace Com.CompanyName.Shooter
+namespace Com.MyCompany.Shooter
 {
     public class Launcher : MonoBehaviourPunCallbacks
     {

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Photon.Pun;
 
 public class PlayerHealth : CharacterHealth
 {
@@ -10,13 +11,27 @@ public class PlayerHealth : CharacterHealth
         base.DecreaseHealth(amount);
         OnHealthChanged?.Invoke();
     }
+
     public override void IncreaseHealth(int amount)
     {
         base.IncreaseHealth(amount);
         OnHealthChanged?.Invoke();
     }
+
     protected override void Die()
     {
         base.Die();
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(Health);
+        }
+        else
+        {
+            Health = (int)stream.ReceiveNext();
+        }
     }
 }

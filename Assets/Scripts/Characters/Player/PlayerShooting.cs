@@ -1,14 +1,19 @@
 using System;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerShooting : MonoBehaviour
+public class PlayerShooting : MonoBehaviour, IPunObservable
 {
-    [SerializeField] private GameObject Bullet;
-    [SerializeField] private GameObject myCamera;
     private const int TYPE_BULLET = 0;
+
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private GameObject myCamera;
+
+    public int BulletsShot { get; private set; }
+    public bool IsFiring { get; private set; }
+
     public event Action OnBulletShoot;
-    public int bulletsShot;
 
     private PlayerControls playerControls;
 
@@ -25,18 +30,20 @@ public class PlayerShooting : MonoBehaviour
 
     private void OnDisable()
     {
-        playerControls.Disable();
         playerControls.Player.Shoot.performed -= PlayerShoot;
+        playerControls.Disable();
     }
 
-    private void PlayerShoot(InputAction.CallbackContext context) //
+    private void PlayerShoot(InputAction.CallbackContext context)
     {
         OnBulletShoot?.Invoke();
-        bulletsShot++;
+        BulletsShot++;
+        IsFiring = true;
 
-        GameObject newBulletGO = Instantiate(Bullet, myCamera.transform.position, myCamera.transform.rotation);
+        GameObject newBulletGO = Instantiate(bulletPrefab, myCamera.transform.position, myCamera.transform.rotation);
         Bullet bullet = newBulletGO.GetComponent<Bullet>();
         bullet.Shoot(TYPE_BULLET, myCamera.transform.position, myCamera.transform.forward);
+
         Physics.IgnoreCollision(GetComponent<CharacterController>(), newBulletGO.GetComponent<Collider>());
     }
 
@@ -44,4 +51,18 @@ public class PlayerShooting : MonoBehaviour
     {
         myCamera = camTransform.gameObject;
     }
+
+    #region IPunObservable implementation
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(IsFiring); // Share IsFiring property from this instance to the other players
+        }
+        else
+        {
+            IsFiring = (bool)stream.ReceiveNext(); // Receives info from the original instance to the instance viewed by the other players
+        }
+    }
+    #endregion
 }

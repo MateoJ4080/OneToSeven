@@ -51,6 +51,6 @@ public class UIManager : MonoBehaviour
     }
     private void UpdateBulletsText()
     {
-        displayBulletsShot.text = "Bullets: " + _playerShooting.bulletsShot.ToString();
+        displayBulletsShot.text = "Bullets: " + _playerShooting.BulletsShot.ToString();
     }
 }

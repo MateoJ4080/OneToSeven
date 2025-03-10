@@ -1,8 +1,5 @@
 using UnityEngine;
 using Photon.Pun;
-using Unity.Cinemachine;
-using System;
-using System.Linq;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : PlayerHealth
@@ -37,7 +34,6 @@ public class PlayerController : PlayerHealth
     {
         // Component initialization
         _inputManager = InputManager.Instance;
-        _playerControls = new PlayerControls();
         _controller = GetComponent<CharacterController>();
         photonView = GetComponent<PhotonView>();
     }
@@ -50,18 +46,10 @@ public class PlayerController : PlayerHealth
         }
     }
 
-    void OnEnable()
-    {
-        _playerControls.Enable();
-    }
-
-    void OnDisable()
-    {
-        _playerControls.Disable();
-    }
-
     void Update()
     {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected == true) return; // Since every player instance in the scene will have this script, we only let execute the Update of the object the Player is controlling, based on the PhotonView component
+
         Move();
         HandleState();
         transform.rotation = Quaternion.Euler(0, cameraTransform.rotation.eulerAngles.y, 0);

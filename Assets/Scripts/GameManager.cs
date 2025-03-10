@@ -4,13 +4,34 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
 
-using UnityEngine.EventSystems;
-
 namespace Com.CompanyName.Shooter
 {
 
     public class GameManager : MonoBehaviourPunCallbacks
     {
+        public GameObject playerPrefab;
+
+        void Start()
+        {
+            if (playerPrefab == null)
+            {
+                Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
+            }
+            else
+            {
+                if (PlayerManager.LocalPlayerInstance == null)
+                {
+                    Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManager.GetActiveScene().name);
+                    // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+                    PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                }
+                else
+                {
+                    Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+                }
+            }
+        }
+
         #region Photon Callbacks
 
         /// <summary>
@@ -47,7 +68,7 @@ namespace Com.CompanyName.Shooter
 
         #endregion
 
-        #region 
+        #region OnPlayerEnterRoom and OnPlayerLeftRoom
 
         public override void OnPlayerEnteredRoom(Player other)
         {

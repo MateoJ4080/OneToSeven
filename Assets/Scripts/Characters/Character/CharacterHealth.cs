@@ -6,7 +6,11 @@ public class CharacterHealth : Character
     [SerializeField] private int _maxHealth = 100;
     protected bool isDead;
 
-    public int Health => _health;
+    public int Health
+    {
+        get => _health;
+        protected set => _health = Mathf.Clamp(value, 0, _maxHealth);
+    }
 
     public virtual void IncreaseHealth(int amount)
     {

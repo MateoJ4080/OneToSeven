@@ -8,7 +8,7 @@ using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 
-namespace Com.CompanyName.Shooter
+namespace Com.MyCompany.Shooter
 {
     /// <summary>
     /// Player name input field. Let the user input his name, will appear above the player in the game.
