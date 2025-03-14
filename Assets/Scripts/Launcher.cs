@@ -52,6 +52,7 @@ namespace Com.MyCompany.Shooter
             // This makes sure we can use PhotonNetwork.LoadLevel() on the master client, and all clients in the same room sync their level automatically
             PhotonNetwork.AutomaticallySyncScene = true;
         }
+
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity during initialization phase.
         /// </summary>
@@ -62,7 +63,6 @@ namespace Com.MyCompany.Shooter
         }
 
         #endregion
-
 
         #region Public Methods
 
@@ -119,7 +119,7 @@ namespace Com.MyCompany.Shooter
 
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
-            Debug.Log("PUN Basics: OnJoinRandomFailed() was called by PUN. No random room available, so we create one.");
+            // Debug.Log("PUN Basics: OnJoinRandomFailed() was called by PUN. No random room available, so we create one.");
 
             // #Critical: We failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
             PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayersPerRoom });
@@ -132,7 +132,7 @@ namespace Com.MyCompany.Shooter
             // #Critical: We only load if we are the first player, else we rely on "PhotonNetwork.AutomaticallySyncScene" to sync our instance scene.
             if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
             {
-                Debug.Log("We load 'Room for 1'");
+                // Debug.Log("We load 'Room for 1'");
 
                 // #Critical
                 // Load the Room Level.

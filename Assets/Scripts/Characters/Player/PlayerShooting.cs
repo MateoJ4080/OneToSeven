@@ -9,6 +9,7 @@ public class PlayerShooting : MonoBehaviour, IPunObservable
 
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private GameObject myCamera;
+    private PhotonView photonView;
 
     public int BulletsShot { get; private set; }
     public bool IsFiring { get; private set; }
@@ -19,7 +20,12 @@ public class PlayerShooting : MonoBehaviour, IPunObservable
 
     void Awake()
     {
+        photonView = GetComponent<PhotonView>();
         playerControls = new PlayerControls();
+        if (photonView.IsMine)
+        {
+            myCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        }
     }
 
     private void OnEnable()

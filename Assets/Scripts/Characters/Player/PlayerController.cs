@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
+using Unity.Cinemachine;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : PlayerHealth
@@ -11,11 +12,11 @@ public class PlayerController : PlayerHealth
     private PhotonView photonView;
     private CharacterController _controller;
     private InputManager _inputManager;
-    private PlayerControls _playerControls;
 
     // Camera settings   
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Transform headTransform;
+    private CinemachineCamera cmCam;
 
     // Player state
     private PlayerState _state = PlayerState.Idle;
@@ -42,6 +43,11 @@ public class PlayerController : PlayerHealth
     {
         if (photonView.IsMine)
         {
+            if (cmCam == null)
+            {
+                cmCam = GameObject.FindWithTag("CMcam").GetComponent<CinemachineCamera>();
+            }
+            cmCam.Target.TrackingTarget = headTransform;
             cameraTransform = Camera.main.transform;
         }
     }

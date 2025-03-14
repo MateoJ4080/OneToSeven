@@ -3,10 +3,10 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 namespace Com.CompanyName.Shooter
 {
-
     public class GameManager : MonoBehaviourPunCallbacks
     {
         public GameObject playerPrefab;
@@ -17,22 +17,14 @@ namespace Com.CompanyName.Shooter
             {
                 Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
             }
-            else
-            {
-                if (PlayerManager.LocalPlayerInstance == null)
-                {
-                    Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManager.GetActiveScene().name);
-                    // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                    PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
-                }
-                else
-                {
-                    Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
-                }
-            }
+
+            StartCoroutine(WaitForRoomAndInstantiate());
         }
 
-        #region Photon Callbacks
+        void Update()
+        {
+            Debug.Log("<b><color='orange'>Player Count: " + PhotonNetwork.CurrentRoom.PlayerCount);
+        }
 
         /// <summary>
         /// Called when the local player left the room. We need to load the launcher scene.
@@ -42,33 +34,26 @@ namespace Com.CompanyName.Shooter
             SceneManager.LoadScene(0);
         }
 
-        #endregion
-
-        #region Private Methods
-
         void LoadArena()
         {
+            Debug.Log("<b>Checking <color=green>!PhotonNetwork.IsMasterClient...");
+
             if (!PhotonNetwork.IsMasterClient)
             {
                 Debug.LogError("PhotonNetwork: Trying to load a level but not in the master client");
                 return;
             }
-            Debug.LogFormat("PhotonNetwork: Loading level: {0}", PhotonNetwork.CurrentRoom.PlayerCount);
-            PhotonNetwork.LoadLevel("Room for 1");
+            if (SceneManager.GetActiveScene().name != "Room for 1")
+            {
+                Debug.LogFormat("PhotonNetwork: Loading level: 1"); // {0}
+                PhotonNetwork.LoadLevel("Room for 1");
+            }
         }
-
-        #endregion
-
-        #region Public Methods
 
         public void LeaveRoom()
         {
             PhotonNetwork.LeaveRoom();
         }
-
-        #endregion
-
-        #region OnPlayerEnterRoom and OnPlayerLeftRoom
 
         public override void OnPlayerEnteredRoom(Player other)
         {
@@ -78,6 +63,7 @@ namespace Com.CompanyName.Shooter
             {
                 Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
 
+                Debug.Log("<b><color=red>Trying to load arena...");
                 LoadArena();
             }
         }
@@ -86,14 +72,27 @@ namespace Com.CompanyName.Shooter
         {
             Debug.LogFormat("OnPlayerLeftRoom() {0}", other.NickName); // seen when other disconnects
 
-            if (PhotonNetwork.IsMasterClient)
+            if (PhotonNetwork.LocalPlayer.IsMasterClient)
             {
                 Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
 
                 LoadArena();
             }
         }
+        IEnumerator WaitForRoomAndInstantiate()
+        {
+            // Wait for the player to be in a room
+            while (!PhotonNetwork.InRoom)
+            {
+                yield return null; // Wait a frame
+            }
 
-        #endregion
+            Debug.LogWarning($"<b><color=green>Instantiating {PhotonNetwork.NickName}...");
+
+            if (PlayerManager.LocalPlayerInstance == null)
+            {
+                PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+            }
+        }
     }
 }

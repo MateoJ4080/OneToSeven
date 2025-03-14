@@ -23,7 +23,9 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(gameObject + " has collided with " + other.name);
+        Debug.Log($"<color:'white'>{gameObject} has collided with {other.name}");
+
+        Destroy(gameObject);
     }
 
     void OnCollisionEnter(Collision other)

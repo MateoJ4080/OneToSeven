@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -13,23 +14,11 @@ public class UIManager : MonoBehaviour
 
     void Awake()
     {
-        _playerHealth = _player.GetComponent<PlayerHealth>();
-        _playerShooting = _player.GetComponent<PlayerShooting>();
-
-        UpdateScoreText();
-        UpdateHealthText();
-        UpdateBulletsText();
-    }
-
-    void Start()
-    {
     }
 
     void OnEnable()
     {
-        ScoreManager.OnScoreChanged += UpdateScoreText;
-        _playerHealth.OnHealthChanged += UpdateHealthText;
-        _playerShooting.OnBulletShoot += UpdateBulletsText;
+        StartCoroutine(WaitForPlayerToUpdateUI());
     }
 
     void OnDisable()
@@ -38,6 +27,25 @@ public class UIManager : MonoBehaviour
         ScoreManager.OnScoreChanged -= UpdateScoreText;
         _playerHealth.OnHealthChanged -= UpdateHealthText;
         _playerShooting.OnBulletShoot -= UpdateBulletsText;
+    }
+
+    private IEnumerator WaitForPlayerToUpdateUI()
+    {
+        while (_playerHealth == null)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                _playerHealth = player.GetComponent<PlayerHealth>();
+                _playerShooting = player.GetComponent<PlayerShooting>();
+
+                ScoreManager.OnScoreChanged += UpdateScoreText;
+                _playerHealth.OnHealthChanged += UpdateHealthText;
+                _playerShooting.OnBulletShoot += UpdateBulletsText;
+            }
+
+            yield return null;
+        }
     }
 
     // Updates the UI only when text values change
