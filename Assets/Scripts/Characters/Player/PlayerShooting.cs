@@ -5,8 +5,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerShooting : MonoBehaviour, IPunObservable
 {
-    private const int TYPE_BULLET = 0;
-
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private GameObject myCamera;
     private PhotonView photonView;
@@ -14,14 +12,16 @@ public class PlayerShooting : MonoBehaviour, IPunObservable
     public int BulletsShot { get; private set; }
     public bool IsFiring { get; private set; }
 
-    public event Action OnBulletShoot;
-
     private PlayerControls playerControls;
+    private PoolManager poolManager;
+
 
     void Awake()
     {
         photonView = GetComponent<PhotonView>();
         playerControls = new PlayerControls();
+        poolManager = FindAnyObjectByType<PoolManager>();
+
         if (photonView.IsMine)
         {
             myCamera = GameObject.FindGameObjectWithTag("MainCamera");
@@ -42,15 +42,13 @@ public class PlayerShooting : MonoBehaviour, IPunObservable
 
     private void PlayerShoot(InputAction.CallbackContext context)
     {
-        OnBulletShoot?.Invoke();
-        BulletsShot++;
         IsFiring = true;
 
-        GameObject newBulletGO = Instantiate(bulletPrefab, myCamera.transform.position, myCamera.transform.rotation);
-        Bullet bullet = newBulletGO.GetComponent<Bullet>();
-        bullet.Shoot(TYPE_BULLET, myCamera.transform.position, myCamera.transform.forward);
+        GameObject bullet = poolManager.GetBullet();
+        Bullet bulletScript = bullet.GetComponent<Bullet>();
+        bulletScript.Shoot(myCamera.transform.position, myCamera.transform.forward);
 
-        Physics.IgnoreCollision(GetComponent<CharacterController>(), newBulletGO.GetComponent<Collider>());
+        Physics.IgnoreCollision(GetComponent<CharacterController>(), bullet.GetComponent<Collider>());
     }
 
     public void SetCamera(Transform camTransform)
@@ -58,7 +56,6 @@ public class PlayerShooting : MonoBehaviour, IPunObservable
         myCamera = camTransform.gameObject;
     }
 
-    #region IPunObservable implementation
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
@@ -70,5 +67,4 @@ public class PlayerShooting : MonoBehaviour, IPunObservable
             IsFiring = (bool)stream.ReceiveNext(); // Receives info from the original instance to the instance viewed by the other players
         }
     }
-    #endregion
 }

@@ -6,19 +6,18 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI displayScore;
     [SerializeField] private TextMeshProUGUI displayHealth;
-    [SerializeField] private TextMeshProUGUI displayBulletsShot;
 
-    [SerializeField] private GameObject _player;
-    private PlayerHealth _playerHealth;
-    private PlayerShooting _playerShooting;
+    [SerializeField] private GameObject player;
+    [SerializeField] private PlayerHealth _playerHealth;
 
-    void Awake()
-    {
-    }
+
 
     void OnEnable()
     {
         StartCoroutine(WaitForPlayerToUpdateUI());
+
+        ScoreManager.OnScoreChanged -= UpdateScoreText;
+        _playerHealth.OnHealthChanged -= UpdateHealthText;
     }
 
     void OnDisable()
@@ -26,22 +25,21 @@ public class UIManager : MonoBehaviour
         // Unsubscribe to avoid null references and improve performance when the object is disabled
         ScoreManager.OnScoreChanged -= UpdateScoreText;
         _playerHealth.OnHealthChanged -= UpdateHealthText;
-        _playerShooting.OnBulletShoot -= UpdateBulletsText;
     }
 
     private IEnumerator WaitForPlayerToUpdateUI()
     {
         while (_playerHealth == null)
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            Debug.Log("<b>Checking <color=orange>Trying to find player...");
+            player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
+                Debug.Log("<b>Checking <color=green>Player found");
                 _playerHealth = player.GetComponent<PlayerHealth>();
-                _playerShooting = player.GetComponent<PlayerShooting>();
 
                 ScoreManager.OnScoreChanged += UpdateScoreText;
                 _playerHealth.OnHealthChanged += UpdateHealthText;
-                _playerShooting.OnBulletShoot += UpdateBulletsText;
             }
 
             yield return null;
@@ -56,9 +54,5 @@ public class UIManager : MonoBehaviour
     private void UpdateHealthText()
     {
         displayHealth.text = "Health: " + _playerHealth.Health.ToString();
-    }
-    private void UpdateBulletsText()
-    {
-        displayBulletsShot.text = "Bullets: " + _playerShooting.BulletsShot.ToString();
     }
 }

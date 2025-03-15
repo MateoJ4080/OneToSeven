@@ -2,45 +2,44 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private int _speed;
-    [SerializeField] private int _damage;
-    [SerializeField] private int _type;
+    [SerializeField] private int speed;
+    [SerializeField] private int damage;
+    [SerializeField] private float maxDistance = 20f;
+    private Vector3 startPosition;
+    private PoolManager poolManager;
 
-    void Start()
+    void Awake()
     {
-        {
-            Rigidbody rb = GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.linearVelocity = transform.forward * _speed;
-            }
-            else
-            {
-                Debug.LogError("No Rigidbody found");
-            }
-        }
+        startPosition = transform.position;
+        poolManager = FindFirstObjectByType<PoolManager>();
     }
 
-    void OnTriggerEnter(Collider other)
+    void Update()
     {
-        Debug.Log($"<color:'white'>{gameObject} has collided with {other.name}");
+        MoveBullet();
+    }
 
-        Destroy(gameObject);
+    void MoveBullet()
+    {
+        transform.Translate(speed * Time.deltaTime * Vector3.forward);
+
+        if (Vector3.Distance(startPosition, transform.position) >= maxDistance)
+        {
+            poolManager.ReturnBullet(gameObject); // Return bullet to pool
+        }
     }
 
     void OnCollisionEnter(Collision other)
     {
-        CharacterHealth _characterHealth = other.gameObject.GetComponent<CharacterHealth>();
-        if (_characterHealth != null)
+        poolManager.ReturnBullet(gameObject);
+        if (other.gameObject.TryGetComponent<CharacterHealth>(out var _characterHealth))
         {
-            _characterHealth.DecreaseHealth(_damage);
-            Destroy(gameObject);
+            _characterHealth.DecreaseHealth(damage);
         }
     }
 
-    public void Shoot(int type, Vector3 _position, Vector3 _direction)
+    public void Shoot(Vector3 _position, Vector3 _direction)
     {
-        _type = type;
         transform.position = _position;
         transform.forward = _direction;
     }
