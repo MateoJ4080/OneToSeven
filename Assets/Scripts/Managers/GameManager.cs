@@ -3,27 +3,14 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 namespace Com.CompanyName.Shooter
 {
     public class GameManager : MonoBehaviourPunCallbacks
     {
-        public GameObject playerPrefab;
-
         void Start()
         {
-            if (playerPrefab == null)
-            {
-                Debug.LogError("<Color=Red><a>Missing</a></Color> playerPrefab Reference. Please set it up in GameObject 'Game Manager'", this);
-            }
-
-            StartCoroutine(WaitForRoomAndInstantiate());
-        }
-
-        void Update()
-        {
-            Debug.Log("<b><color='orange'>Player Count: " + PhotonNetwork.CurrentRoom.PlayerCount);
+            SpawnManager.Instance.SpawnPlayer(PhotonNetwork.CountOfPlayers - 1);
         }
 
         /// <summary>
@@ -50,11 +37,6 @@ namespace Com.CompanyName.Shooter
             }
         }
 
-        public void LeaveRoom()
-        {
-            PhotonNetwork.LeaveRoom();
-        }
-
         public override void OnPlayerEnteredRoom(Player other)
         {
             Debug.LogFormat("OnPlayerEnteredRoom() {0}", other.NickName); // not seen if you're the player connecting
@@ -63,7 +45,6 @@ namespace Com.CompanyName.Shooter
             {
                 Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
 
-                Debug.Log("<b><color=red>Trying to load arena...");
                 LoadArena();
             }
         }
@@ -77,21 +58,6 @@ namespace Com.CompanyName.Shooter
                 Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
 
                 LoadArena();
-            }
-        }
-        IEnumerator WaitForRoomAndInstantiate()
-        {
-            // Wait for the player to be in a room
-            while (!PhotonNetwork.InRoom)
-            {
-                yield return null; // Wait a frame
-            }
-
-            Debug.LogWarning($"<b><color=green>Instantiating {PhotonNetwork.NickName}...");
-
-            if (PlayerManager.LocalPlayerInstance == null)
-            {
-                PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
             }
         }
     }

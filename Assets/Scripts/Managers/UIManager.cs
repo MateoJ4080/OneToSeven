@@ -10,14 +10,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private PlayerHealth _playerHealth;
 
-
-
     void OnEnable()
     {
         StartCoroutine(WaitForPlayerToUpdateUI());
-
-        ScoreManager.OnScoreChanged -= UpdateScoreText;
-        _playerHealth.OnHealthChanged -= UpdateHealthText;
     }
 
     void OnDisable()
@@ -31,11 +26,9 @@ public class UIManager : MonoBehaviour
     {
         while (_playerHealth == null)
         {
-            Debug.Log("<b>Checking <color=orange>Trying to find player...");
             player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
-                Debug.Log("<b>Checking <color=green>Player found");
                 _playerHealth = player.GetComponent<PlayerHealth>();
 
                 ScoreManager.OnScoreChanged += UpdateScoreText;

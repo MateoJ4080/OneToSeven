@@ -25,13 +25,22 @@ public class Bullet : MonoBehaviour
 
         if (Vector3.Distance(startPosition, transform.position) >= maxDistance)
         {
-            poolManager.ReturnBullet(gameObject); // Return bullet to pool
+            DeactivateBullet(); // Return bullet to pool
         }
+    }
+
+    void DeactivateBullet()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        poolManager.ReturnBullet(gameObject);
     }
 
     void OnCollisionEnter(Collision other)
     {
-        poolManager.ReturnBullet(gameObject);
+        DeactivateBullet();
         if (other.gameObject.TryGetComponent<CharacterHealth>(out var _characterHealth))
         {
             _characterHealth.DecreaseHealth(damage);

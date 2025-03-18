@@ -20,7 +20,6 @@ public class PlayerManager : MonoBehaviour
         if (photonView.IsMine)
         {
             PlayerManager.LocalPlayerInstance = this.gameObject;
-            Debug.Log("LocalInstance set to " + LocalPlayerInstance);
         }
         // #Critical
         // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
