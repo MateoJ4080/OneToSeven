@@ -629,7 +629,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26516c98c4a7c054c92841676fde5649, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 7389704765681563824, guid: b7bd8f35515f02145b9f2d940be6ef79, type: 3}
 --- !u!4 &253095872
 Transform:
   m_ObjectHideFlags: 0
@@ -903,6 +902,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 7389704765681563824, guid: b7bd8f35515f02145b9f2d940be6ef79, type: 3}
+  playerPrefabHead: {fileID: 0}
 --- !u!1 &630995266
 GameObject:
   m_ObjectHideFlags: 0
@@ -1285,7 +1285,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 954129235}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!20 &954129238
 Camera:
   m_ObjectHideFlags: 0

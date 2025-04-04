@@ -61,6 +61,41 @@ public class PlayerController : PlayerHealth
         transform.rotation = Quaternion.Euler(0, cameraTransform.rotation.eulerAngles.y, 0);
     }
 
+    private void Move()
+    {
+        // Jumping
+        _groundedPlayer = _controller.isGrounded;
+        if (_groundedPlayer && _playerVelocity.y < 0)
+        {
+            _playerVelocity.y = -0.5f;
+        }
+        if (_inputManager.PlayerJumpedThisFrame() && _groundedPlayer)
+        {
+            _playerVelocity.y += Mathf.Sqrt(_jumpHeight * -2.0f * _gravityValue);
+        }
+
+        // Get input and apply camera rotation
+        Vector3 movementInput = _inputManager.GetPlayerMovement();
+        Vector3 rawMovement = new(movementInput.x, 0, movementInput.y);
+        rawMovement = cameraTransform.forward * rawMovement.z + cameraTransform.right * rawMovement.x;
+        rawMovement.y = 0;
+
+        // Smooth movement interpolation
+        _currentMovement = Vector3.MoveTowards(_currentMovement, rawMovement, _movementLerpSpeed * Time.deltaTime);
+        _controller.Move(_currentMovement * _movementSpeed * Time.deltaTime);
+
+
+        // Apply gravity
+        _playerVelocity.y += _gravityValue * Time.deltaTime;
+        _controller.Move(_playerVelocity * Time.deltaTime);
+    }
+
+    private bool IsMoving()
+    {
+        return _movementInput.magnitude > 0;
+    }
+
+    // Not doing anything right now but leave it here in case of future implementations. If made, delete this comment.
     private void HandleState()
     {
         switch (_state)
@@ -78,41 +113,5 @@ public class PlayerController : PlayerHealth
                 Move();
                 break;
         }
-    }
-
-    private void Move()
-    {
-        _groundedPlayer = _controller.isGrounded;
-
-        // Reset player velocity when grounded
-        if (_groundedPlayer && _playerVelocity.y < 0)
-        {
-            _playerVelocity.y = 0f;
-        }
-
-        // Get input and apply camera rotation
-        Vector3 movementInput = _inputManager.GetPlayerMovement();
-        Vector3 rawMovement = new(movementInput.x, 0, movementInput.y);
-        rawMovement = cameraTransform.forward * rawMovement.z + cameraTransform.right * rawMovement.x;
-        rawMovement.y = 0;
-
-        // Smooth movement interpolation
-        _currentMovement = Vector3.MoveTowards(_currentMovement, rawMovement, _movementLerpSpeed * Time.deltaTime);
-        _controller.Move(_currentMovement * _movementSpeed * Time.deltaTime);
-
-        // Handle jumping
-        if (_inputManager.PlayerJumpedThisFrame() && _groundedPlayer)
-        {
-            _playerVelocity.y += Mathf.Sqrt(_jumpHeight * -2.0f * _gravityValue);
-        }
-
-        // Apply gravity
-        _playerVelocity.y += _gravityValue * Time.deltaTime;
-        _controller.Move(_playerVelocity * Time.deltaTime);
-    }
-
-    private bool IsMoving()
-    {
-        return _movementInput.magnitude > 0;
     }
 }
